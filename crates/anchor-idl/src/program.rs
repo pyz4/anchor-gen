@@ -20,6 +20,8 @@ pub struct GeneratorOptions {
     pub zero_copy: Option<PathList>,
     /// List of `repr(packed)` structs.
     pub packed: Option<PathList>,
+    /// List of `zero_copy(unsafe)` structs.
+    pub allow_unsafe: Option<PathList>,
 }
 
 fn path_list_to_string(list: Option<&PathList>) -> HashSet<String> {
@@ -40,6 +42,7 @@ impl GeneratorOptions {
 
         let zero_copy = path_list_to_string(self.zero_copy.as_ref());
         let packed = path_list_to_string(self.packed.as_ref());
+        let allow_unsafe = path_list_to_string(self.allow_unsafe.as_ref());
 
         let mut struct_opts: BTreeMap<String, StructOpts> = BTreeMap::new();
         let all_structs: HashSet<&String> = zero_copy.union(&packed).collect::<HashSet<_>>();
@@ -49,6 +52,7 @@ impl GeneratorOptions {
                 StructOpts {
                     zero_copy: zero_copy.contains(name),
                     packed: packed.contains(name),
+                    allow_unsafe: allow_unsafe.contains(name),
                 },
             );
         });
@@ -61,6 +65,7 @@ impl GeneratorOptions {
 pub struct StructOpts {
     pub packed: bool,
     pub zero_copy: bool,
+    pub allow_unsafe: bool,
 }
 
 pub struct Generator {

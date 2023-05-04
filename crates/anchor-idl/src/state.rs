@@ -29,19 +29,30 @@ pub fn generate_account(
     } else {
         quote! {}
     };
+
     let derive_account = if opts.zero_copy {
         let repr = if opts.packed {
             quote! {
                 #[repr(packed)]
             }
         } else {
+            quote! {}
+        };
+
+        let zero_copy = if opts.allow_unsafe {
             quote! {
-                #[repr(C)]
+                #[account(zero_copy(unsafe))]
+            }
+        } else {
+            quote! {
+                #[account(zero_copy)]
             }
         };
+
         quote! {
-            #[account(zero_copy)]
+            #zero_copy
             #repr
+            #[repr(C)]
         }
     } else {
         quote! {
