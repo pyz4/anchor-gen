@@ -105,6 +105,9 @@ pub fn get_type_properties(defs: &[IdlTypeDefinition], ty: &IdlType) -> FieldLis
                 anchor_syn::idl::types::IdlTypeDefinitionTy::Enum { variants } => {
                     get_variant_list_properties(defs, variants)
                 }
+                anchor_syn::idl::types::IdlTypeDefinitionTy::Alias { .. } => {
+                    panic!("unexpected alias account");
+                }
             }
         }
         IdlType::Option(inner) => get_type_properties(defs, inner),
@@ -115,6 +118,9 @@ pub fn get_type_properties(defs: &[IdlTypeDefinition], ty: &IdlType) -> FieldLis
                 can_copy: inner.can_copy,
                 can_derive_default: can_derive_array_len && inner.can_derive_default,
             }
+        }
+        _ => {
+            todo!()
         }
     }
 }
@@ -248,6 +254,7 @@ pub fn generate_typedefs(
             anchor_syn::idl::types::IdlTypeDefinitionTy::Enum { variants } => {
                 generate_enum(typedefs, &struct_name, variants)
             }
+            anchor_syn::idl::types::IdlTypeDefinitionTy::Alias { .. } => todo!(),
         }
     });
     quote! {

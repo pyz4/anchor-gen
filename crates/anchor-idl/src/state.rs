@@ -88,6 +88,9 @@ pub fn generate_accounts(
         anchor_syn::idl::types::IdlTypeDefinitionTy::Enum { .. } => {
             panic!("unexpected enum account");
         }
+        anchor_syn::idl::types::IdlTypeDefinitionTy::Alias { .. } => {
+            panic!("unexpected alias account");
+        }
     });
     quote! {
         #(#defined)*
