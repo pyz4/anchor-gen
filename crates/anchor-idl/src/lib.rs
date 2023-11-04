@@ -1,6 +1,6 @@
 //! Generates Rust code from an Anchor IDL.
 
-pub use anchor_syn::idl::*;
+pub use anchor_syn::idl::types::*;
 
 mod account;
 mod instruction;

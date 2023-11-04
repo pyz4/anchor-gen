@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use anchor_syn::idl::{IdlField, IdlTypeDefinition};
+use anchor_syn::idl::types::{IdlField, IdlTypeDefinition};
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 
@@ -81,11 +81,11 @@ pub fn generate_accounts(
     struct_opts: &BTreeMap<String, StructOpts>,
 ) -> TokenStream {
     let defined = account_defs.iter().map(|def| match &def.ty {
-        anchor_syn::idl::IdlTypeDefinitionTy::Struct { fields } => {
+        anchor_syn::idl::types::IdlTypeDefinitionTy::Struct { fields } => {
             let opts = struct_opts.get(&def.name).copied().unwrap_or_default();
             generate_account(typedefs, &def.name, fields, opts)
         }
-        anchor_syn::idl::IdlTypeDefinitionTy::Enum { .. } => {
+        anchor_syn::idl::types::IdlTypeDefinitionTy::Enum { .. } => {
             panic!("unexpected enum account");
         }
     });

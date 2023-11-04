@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use anchor_syn::idl::{EnumFields, IdlEnumVariant, IdlField, IdlType, IdlTypeDefinition};
+use anchor_syn::idl::types::{EnumFields, IdlEnumVariant, IdlField, IdlType, IdlTypeDefinition};
 use heck::ToSnakeCase;
 use proc_macro2::{Ident, TokenStream};
 use quote::{format_ident, quote};
@@ -99,10 +99,10 @@ pub fn get_type_properties(defs: &[IdlTypeDefinition], ty: &IdlType) -> FieldLis
         IdlType::Defined(inner) => {
             let def = defs.iter().find(|def| def.name == *inner).unwrap();
             match &def.ty {
-                anchor_syn::idl::IdlTypeDefinitionTy::Struct { fields } => {
+                anchor_syn::idl::types::IdlTypeDefinitionTy::Struct { fields } => {
                     get_field_list_properties(defs, fields)
                 }
-                anchor_syn::idl::IdlTypeDefinitionTy::Enum { variants } => {
+                anchor_syn::idl::types::IdlTypeDefinitionTy::Enum { variants } => {
                     get_variant_list_properties(defs, variants)
                 }
             }
@@ -241,11 +241,11 @@ pub fn generate_typedefs(
     let defined = typedefs.iter().map(|def| {
         let struct_name = format_ident!("{}", def.name);
         match &def.ty {
-            anchor_syn::idl::IdlTypeDefinitionTy::Struct { fields } => {
+            anchor_syn::idl::types::IdlTypeDefinitionTy::Struct { fields } => {
                 let opts = struct_opts.get(&def.name).copied().unwrap_or_default();
                 generate_struct(typedefs, &struct_name, fields, opts)
             }
-            anchor_syn::idl::IdlTypeDefinitionTy::Enum { variants } => {
+            anchor_syn::idl::types::IdlTypeDefinitionTy::Enum { variants } => {
                 generate_enum(typedefs, &struct_name, variants)
             }
         }
