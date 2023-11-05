@@ -254,7 +254,7 @@ pub fn generate_typedefs(
             anchor_syn::idl::types::IdlTypeDefinitionTy::Enum { variants } => {
                 generate_enum(typedefs, &struct_name, variants)
             }
-            anchor_syn::idl::types::IdlTypeDefinitionTy::Alias { .. } => todo!(),
+            &anchor_syn::idl::types::IdlTypeDefinitionTy::Alias { .. } => todo!(),
         }
     });
     quote! {
